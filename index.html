@@ -1,1014 +1,2433 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shaw Hub - Innovation Fellowship Platform</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --ink: #0a0a0a;
-            --paper: #f5f1ea;
-            --paper-2: #ebe5da;
-            --paper-3: #ddd5c5;
-            --accent: #ff5b2e;
-            --accent-2: #2e5bff;
-            --kelp: #1d4d3a;
-            --highlight: #ffd84d;
-            --muted: #6b6357;
-        }
-
-        html, body {
-            height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--paper);
-            color: var(--ink);
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: var(--paper-2);
-            border-right: 1px solid var(--paper-3);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--paper-3);
-        }
-
-        .sidebar-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .sidebar-header p {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 12px;
-        }
-
-        .nav-item {
-            display: block;
-            width: 100%;
-            padding: 12px 16px;
-            margin-bottom: 4px;
-            background: none;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 14px;
-            transition: background 0.2s;
-            color: var(--ink);
-        }
-
-        .nav-item:hover {
-            background: var(--paper-3);
-        }
-
-        .nav-item.active {
-            background: var(--ink);
-            color: var(--paper);
-            font-weight: 600;
-        }
-
-        .sidebar-footer {
-            padding: 12px;
-            border-top: 1px solid var(--paper-3);
-        }
-
-        .logout-btn {
-            width: 100%;
-            padding: 10px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .page {
-            flex: 1;
-            overflow-y: auto;
-            padding: 32px;
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .page h1 {
-            font-size: 36px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .page-subtitle {
-            color: var(--muted);
-            margin-bottom: 32px;
-            font-size: 15px;
-        }
-
-        .kpi-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .kpi-card {
-            background: var(--paper-2);
-            padding: 24px;
-            border-radius: 12px;
-        }
-
-        .kpi-label {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .kpi-value {
-            font-size: 32px;
-            font-weight: 600;
-        }
-
-        .kpi-subtext {
-            color: var(--muted);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .card {
-            background: var(--paper-2);
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        .card h2 {
-            font-size: 18px;
-            margin-bottom: 16px;
-            font-weight: 600;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--paper-3);
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 14px;
-            background: white;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--ink);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-accent:hover {
-            opacity: 0.9;
-        }
-
-        .btn-secondary {
-            background: var(--paper-3);
-            color: var(--ink);
-        }
-
-        .btn-secondary:hover {
-            background: var(--paper-3);
-            opacity: 0.8;
-        }
-
-        .message {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--paper-3);
-        }
-
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .message-avatar.avatar1 {
-            background: var(--kelp);
-        }
-
-        .message-avatar.avatar2 {
-            background: var(--accent);
-        }
-
-        .message-avatar.avatar3 {
-            background: var(--accent-2);
-        }
-
-        .message-content p {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .message-text {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .message-time {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-
-        .channel-list {
-            list-style: none;
-        }
-
-        .channel-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            transition: background 0.2s;
-            font-size: 14px;
-        }
-
-        .channel-item:hover {
-            background: var(--paper-3);
-        }
-
-        .event-card {
-            background: var(--paper-2);
-            padding: 20px;
-            border-left: 4px solid var(--accent);
-            margin-bottom: 16px;
-            border-radius: 8px;
-        }
-
-        .event-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .event-header h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .event-meta {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--paper-3);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--kelp);
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
-        .progress-text {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .auth-page {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--paper) 0%, var(--paper-2) 100%);
-        }
-
-        .auth-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 24px;
-        }
-
-        .auth-container h1 {
-            text-align: center;
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-
-        .auth-container p {
-            text-align: center;
-            color: var(--muted);
-            margin-bottom: 32px;
-        }
-
-        .auth-card {
-            background: var(--paper-2);
-            padding: 32px;
-            border-radius: 12px;
-            space: 16px;
-        }
-
-        .auth-card .form-group {
-            margin-bottom: 16px;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .auth-buttons button {
-            flex: 1;
-        }
-
-        .roster-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .roster-table th {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid var(--paper-3);
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        .roster-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--paper-3);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-quiet {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                max-height: 60px;
-                border-right: none;
-                border-bottom: 1px solid var(--paper-3);
-                flex-direction: row;
-                overflow-x: auto;
-                overflow-y: hidden;
-            }
-
-            .sidebar-header {
-                padding: 12px 16px;
-                border-bottom: none;
-                border-right: 1px solid var(--paper-3);
-                white-space: nowrap;
-            }
-
-            .sidebar-header h1 {
-                font-size: 20px;
-            }
-
-            .sidebar-header p {
-                display: none;
-            }
-
-            .sidebar-nav {
-                display: flex;
-                flex: 1;
-                padding: 6px;
-                gap: 4px;
-            }
-
-            .nav-item {
-                margin-bottom: 0;
-                white-space: nowrap;
-                font-size: 13px;
-            }
-
-            .sidebar-footer {
-                display: none;
-            }
-
-            .container {
-                flex-direction: column;
-            }
-
-            .page {
-                padding: 16px;
-            }
-
-            .page h1 {
-                font-size: 24px;
-            }
-
-            .kpi-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shaw Hub — Interactive Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f1ea;
+    --paper-2: #ebe5da;
+    --accent: #ff5b2e;
+    --accent-2: #2e5bff;
+    --kelp: #1d4d3a;
+    --kelp-light: #2d6b4f;
+    --sand: #d9cdb8;
+    --highlight: #ffd84d;
+    --muted: #6b6357;
+    --line: rgba(10, 10, 10, 0.12);
+    --serif: 'Instrument Serif', 'Times New Roman', serif;
+    --sans: 'Geist', -apple-system, sans-serif;
+    --mono: 'Geist Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255, 91, 46, 0.08), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(46, 91, 255, 0.06), transparent 40%),
+      var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 60px;
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .workshop-header {
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 600px;
+  }
+  .workshop-header .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .workshop-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .workshop-header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .workshop-header .sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .reset-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+  .reset-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone {
+    width: 380px;
+    height: 800px;
+    background: var(--ink);
+    border-radius: 52px;
+    padding: 14px;
+    box-shadow:
+      0 40px 80px -20px rgba(10, 10, 10, 0.4),
+      0 15px 35px -10px rgba(10, 10, 10, 0.25),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    position: relative;
+    flex-shrink: 0;
+  }
+  @media (max-width: 420px) {
+    .phone {
+      width: calc(100vw - 20px);
+      height: calc(100vh - 140px);
+      border-radius: 40px;
+      padding: 10px;
+    }
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: var(--paper);
+    border-radius: 42px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-screen::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 28px;
+    background: var(--ink);
+    border-radius: 22px;
+    z-index: 100;
+  }
+
+  .status-bar {
+    height: 48px;
+    padding: 16px 32px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    z-index: 50;
+    flex-shrink: 0;
+  }
+  .status-bar .icons::before {
+    content: '••• 5G  ▮';
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .screen-body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ===== SCREEN CONTAINERS ===== */
+  .screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    animation: screenIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .screen.active {
+    display: flex;
+  }
+  @keyframes screenIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottom-nav {
+    height: 84px;
+    background: rgba(245, 241, 234, 0.92);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 16px 28px;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 4px 6px;
+    transition: color 0.2s;
+  }
+  .nav-item:hover { color: var(--ink); }
+  .nav-item.active { color: var(--ink); }
+  .nav-item .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    opacity: 0.4;
+    transition: all 0.3s;
+  }
+  .nav-item.active .dot {
+    background: var(--accent);
+    opacity: 1;
+    box-shadow: 0 0 0 4px rgba(255, 91, 46, 0.15);
+  }
+  .nav-icon { font-size: 20px; line-height: 1; }
+
+  /* ============================================ */
+  /* HOME SCREEN                                  */
+  /* ============================================ */
+  .home-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 22px 18px;
+  }
+  .home-greet { margin-bottom: 22px; }
+  .home-greet .greet-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .home-greet h2 {
+    font-family: var(--serif);
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .home-greet h2 em { font-style: italic; color: var(--accent); }
+
+  .streak-card {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 24px;
+    padding: 20px 22px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .streak-card:active { transform: scale(0.98); }
+  .streak-card::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 91, 46, 0.4), transparent 70%);
+    border-radius: 50%;
+  }
+  .streak-card .row { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 1; }
+  .streak-card .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .streak-card .big {
+    font-family: var(--serif);
+    font-size: 40px;
+    line-height: 1;
+  }
+  .streak-card .big em { font-style: italic; color: var(--accent); }
+  .streak-card .pill {
+    background: var(--accent);
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 20px;
+  }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .quick-card {
+    background: var(--paper-2);
+    border-radius: 20px;
+    padding: 16px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: none;
+    text-align: left;
+    font-family: inherit;
+  }
+  .quick-card:active { transform: scale(0.97); }
+  .quick-card:hover { box-shadow: 0 8px 20px -8px rgba(0,0,0,0.15); }
+  .quick-card .qc-icon { font-size: 24px; line-height: 1; }
+  .quick-card .qc-label { font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+  .quick-card.accent { background: var(--highlight); }
+  .quick-card.accent2 { background: var(--kelp); color: var(--paper); }
+  .quick-card.accent2 .qc-label { color: var(--paper); }
+  .quick-card .badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .section-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 20px 0 12px;
+  }
+  .section-label .l {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-label .more { font-size: 11px; color: var(--accent); font-weight: 500; }
+
+  .feed-item {
+    background: var(--paper-2);
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .feed-item:active { transform: scale(0.98); }
+  .feed-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .feed-avatar.b { background: var(--kelp); }
+  .feed-avatar.c { background: var(--accent-2); }
+  .feed-body { flex: 1; min-width: 0; }
+  .feed-body .who { font-size: 13px; font-weight: 600; }
+  .feed-body .who .when { font-weight: 400; color: var(--muted); font-size: 11px; margin-left: 6px; }
+  .feed-body .what { font-size: 13px; line-height: 1.4; margin-top: 4px; color: #333; }
+
+  /* ============================================ */
+  /* CHATS LIST                                   */
+  /* ============================================ */
+  .chats-header {
+    padding: 14px 22px 14px;
+  }
+  .chats-header h2 {
+    font-family: var(--serif);
+    font-size: 34px;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .search-bar {
+    background: var(--paper-2);
+    border-radius: 14px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .chat-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 22px 8px;
+    overflow-x: auto;
+  }
+  .chat-tab {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background: var(--paper-2);
+    color: var(--muted);
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .chat-tab.active { background: var(--ink); color: var(--paper); }
+
+  .chat-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .chat-row {
+    padding: 14px 22px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.15s;
+    background: transparent;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    width: 100%;
+    font-family: inherit;
+    text-align: left;
+  }
+  .chat-row:hover { background: rgba(0,0,0,0.02); }
+  .chat-row:active { background: rgba(0,0,0,0.05); }
+  .chat-ava {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--kelp);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .chat-ava.solo { border-radius: 50%; background: var(--accent); }
+  .chat-ava.pinned { background: var(--ink); }
+  .chat-ava.health { background: var(--accent-2); }
+  .chat-ava.story { background: var(--highlight); color: var(--ink); }
+  .chat-ava .live-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid var(--paper);
+  }
+  .chat-info { flex: 1; min-width: 0; }
+  .chat-info .top { display: flex; justify-content: space-between; align-items: baseline; }
+  .chat-info .name { font-size: 14px; font-weight: 600; }
+  .chat-info .time { font-size: 11px; color: var(--muted); }
+  .chat-info .preview {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .chat-info .preview .typing { color: var(--accent); font-style: italic; }
+  .unread-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+  }
+  .pin-icon { font-size: 10px; color: var(--muted); margin-left: 4px; }
+  .dm-note {
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    margin: 12px 22px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .dm-note strong { color: var(--ink); }
+
+  /* ============================================ */
+  /* CHAT THREAD                                  */
+  /* ============================================ */
+  .chat-thread-header {
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .back-btn {
+    font-size: 20px;
+    color: var(--muted);
+    width: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .thread-title { flex: 1; }
+  .thread-title h3 { font-size: 15px; font-weight: 600; line-height: 1.1; }
+  .thread-title .sub { font-size: 11px; color: var(--muted); }
+  .thread-title .sub .live { color: #22c55e; font-weight: 500; }
+  .thread-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--accent-2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .thread-icon.dm { background: var(--accent); border-radius: 50%; }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 14px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .day-divider {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 6px 0;
+  }
+  .msg {
+    display: flex;
+    gap: 8px;
+    max-width: 85%;
+    animation: msgIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(6px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .msg.me {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+  .msg-ava {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--kelp);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .msg.me .msg-ava { background: var(--ink); }
+  .msg-bubble {
+    background: var(--paper-2);
+    padding: 9px 13px;
+    border-radius: 16px;
+    border-top-left-radius: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+  .msg.me .msg-bubble {
+    background: var(--ink);
+    color: var(--paper);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 4px;
+  }
+  .msg-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .msg-time {
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .msg.me .msg-time { text-align: right; }
+
+  .poll-msg {
+    background: var(--paper-2);
+    border-radius: 16px;
+    border-top-left-radius: 4px;
+    padding: 14px;
+    width: 280px;
+  }
+  .poll-msg .poll-q { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .poll-opt {
+    margin-bottom: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .poll-opt .bar-wrap {
+    background: var(--paper);
+    border-radius: 8px;
+    height: 28px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 4px;
+    transition: all 0.2s;
+  }
+  .poll-opt:hover .bar-wrap { box-shadow: 0 0 0 2px var(--accent); }
+  .poll-opt .bar {
+    background: var(--accent);
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-weight: 600;
+    font-size: 11px;
+    color: white;
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .poll-opt.kelp .bar { background: var(--kelp); }
+  .poll-opt.voted .bar { background: var(--accent); }
+  .poll-opt .opt-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .poll-opt .votes { font-size: 10px; color: var(--muted); }
+  .poll-opt.voted .opt-text::after {
+    content: '✓ your vote';
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .reactions {
+    display: flex;
+    gap: 4px;
+    margin-top: -4px;
+    margin-left: 38px;
+    flex-wrap: wrap;
+  }
+  .msg.me .reactions { margin-left: 0; margin-right: 38px; justify-content: flex-end; }
+  .react-pill {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .react-pill:hover { transform: scale(1.1); }
+  .react-pill.you-reacted {
+    background: rgba(255, 91, 46, 0.15);
+    border-color: var(--accent);
+  }
+
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 38px;
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  .typing-dots { display: inline-flex; gap: 3px; }
+  .typing-dots span {
+    width: 5px;
+    height: 5px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .composer {
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    background: var(--paper);
+  }
+  .composer-input {
+    flex: 1;
+    background: var(--paper-2);
+    border-radius: 22px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  .composer-input input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink);
+    outline: none;
+  }
+  .composer-input input::placeholder { color: var(--muted); }
+  .composer-actions { display: flex; gap: 4px; }
+  .comp-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: transform 0.15s;
+  }
+  .comp-icon:active { transform: scale(0.92); }
+  .comp-icon.send { background: var(--accent); color: white; }
+  .comp-icon.send:hover { background: #e94d22; }
+  .file-msg {
+    background: var(--paper-2);
+    border-radius: 16px;
+    border-top-left-radius: 4px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .file-msg .file-icon { font-size: 20px; }
+  .file-msg .file-name { font-weight: 600; font-size: 12px; }
+  .file-msg .file-size { font-size: 10px; color: var(--muted); }
+
+  /* ============================================ */
+  /* CALENDAR                                     */
+  /* ============================================ */
+  .cal-header {
+    padding: 14px 22px 8px;
+    flex-shrink: 0;
+  }
+  .cal-header .month {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cal-header h2 {
+    font-family: var(--serif);
+    font-size: 38px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-top: 4px;
+  }
+  .cal-header h2 em { color: var(--accent); font-style: italic; }
+
+  .week-strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding: 18px 14px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .week-day {
+    text-align: center;
+    padding: 10px 4px;
+    border-radius: 12px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .week-day:hover { background: rgba(0,0,0,0.04); }
+  .week-day .wd {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .week-day .dd {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 400;
+  }
+  .week-day.today { background: var(--ink); color: var(--paper); }
+  .week-day.today .wd { color: var(--paper); opacity: 0.6; }
+  .week-day.has-event { position: relative; }
+  .week-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .week-day.today.has-event::after { background: var(--highlight); }
+
+  .events-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 22px;
+  }
+  .event-day-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 12px 0 8px;
+  }
+  .event-day-label:first-child { margin-top: 0; }
+
+  .event-card {
+    background: var(--paper-2);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-card.featured { background: var(--kelp); color: var(--paper); }
+  .event-card.warning { background: var(--highlight); }
+  .event-card .e-time {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .event-card .e-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .event-card .e-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    opacity: 0.75;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .event-card .e-actions { display: flex; gap: 6px; }
+  .rsvp-btn {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .rsvp-yes { background: var(--accent); color: white; }
+  .rsvp-yes:hover { background: #e94d22; }
+  .rsvp-yes.confirmed {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--kelp);
+  }
+  .rsvp-maybe {
+    background: rgba(255,255,255,0.2);
+    color: inherit;
+    border: 1px solid currentColor;
+  }
+  .event-card.warning .rsvp-yes { background: var(--ink); color: var(--paper); }
+  .event-card.warning .rsvp-yes:hover { background: #333; }
+
+  /* ============================================ */
+  /* PROJECTS                                     */
+  /* ============================================ */
+  .sub-header { padding: 14px 22px 6px; flex-shrink: 0; }
+  .sub-header h2 {
+    font-family: var(--serif);
+    font-size: 34px;
+    letter-spacing: -0.01em;
+  }
+  .sub-header h2 em { color: var(--accent); font-style: italic; }
+  .sub-header .sub-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .progress-card {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 22px;
+    margin: 14px 22px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .progress-card::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: -40px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba(255, 216, 77, 0.3), transparent 70%);
+  }
+  .progress-card .pc-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+  .progress-card .pc-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .progress-bar .fill {
+    height: 100%;
+    background: var(--highlight);
+    width: 67%;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .progress-card .pc-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    opacity: 0.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  .submission-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 22px 14px;
+  }
+  .sub-item {
+    background: var(--paper-2);
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    transition: transform 0.15s;
+  }
+  .sub-item:active { transform: scale(0.98); }
+  .sub-item.done { background: rgba(29, 77, 58, 0.08); cursor: default; }
+  .sub-item.urgent { background: var(--highlight); }
+  .sub-status {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .sub-status.done {
+    background: var(--kelp);
+    color: white;
+    border-color: var(--kelp);
+  }
+  .sub-status.urgent {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .sub-detail { flex: 1; min-width: 0; }
+  .sub-detail .s-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .sub-detail .s-meta { font-size: 11px; color: var(--muted); }
+  .sub-detail .s-meta .due { color: var(--accent); font-weight: 600; }
+  .sub-item.done .s-name { text-decoration: line-through; opacity: 0.6; }
+
+  /* ============================================ */
+  /* ME / PROFILE                                 */
+  /* ============================================ */
+  .me-content { flex: 1; overflow-y: auto; padding: 14px 22px 18px; }
+  .me-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0;
+  }
+  .me-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 38px;
+  }
+  .me-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1;
+  }
+  .me-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .me-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--paper-2);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-card .stat-n {
+    font-family: var(--serif);
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-card .stat-l {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.2;
+  }
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .toggle-row .t-label { font-size: 13px; font-weight: 500; }
+  .toggle-row .t-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .toggle {
+    width: 44px;
+    height: 26px;
+    background: var(--paper-2);
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    border: none;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  /* ============================================ */
+  /* MODAL / OVERLAY                              */
+  /* ============================================ */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    border-radius: 42px;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.active { display: flex; }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal {
+    background: var(--paper);
+    width: 100%;
+    border-radius: 28px 28px 0 0;
+    padding: 24px 22px 100px;
+    max-height: 80%;
+    overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--muted);
+    opacity: 0.3;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .modal h3 {
+    font-family: var(--serif);
+    font-size: 26px;
+    margin-bottom: 4px;
+    line-height: 1.1;
+  }
+  .modal .modal-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .form-field {
+    margin-bottom: 16px;
+  }
+  .form-field label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    width: 100%;
+    background: var(--paper-2);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+  .form-field input:focus,
+  .form-field textarea:focus,
+  .form-field select:focus {
+    border-color: var(--accent);
+  }
+  .form-field textarea { min-height: 80px; }
+  .file-upload {
+    background: var(--paper-2);
+    border: 2px dashed var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .file-upload:hover { border-color: var(--accent); color: var(--accent); }
+  .file-upload .upload-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .modal-submit {
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 8px;
+    transition: transform 0.15s;
+  }
+  .modal-submit:active { transform: scale(0.98); }
+  .modal-submit:hover { background: #333; }
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  /* ============================================ */
+  /* TOAST / CONFETTI                             */
+  /* ============================================ */
+  .toast {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast .toast-icon { font-size: 18px; }
+
+  .confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 12px;
+    z-index: 250;
+    pointer-events: none;
+    animation: confettiFall 2s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+  }
+
+  /* ============================================ */
+  /* HINT TOOLTIP                                 */
+  /* ============================================ */
+  .hint {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    z-index: 150;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .hint.show { opacity: 0.9; }
+  .hint::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--ink);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 0; height: 0; }
+
+  /* utility for hidden */
+  .hidden { display: none !important; }
+
+  /* footer */
+  .footer-tips {
+    margin-top: 28px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+  .footer-tips .accent { color: var(--accent); }
+</style>
 </head>
 <body>
-    <div id="auth-screen" class="page active auth-page">
-        <div class="auth-container">
-            <h1>Shaw <em style="font-style: italic; color: var(--accent);">Hub</em></h1>
-            <p>Innovation Fellowship Platform</p>
-            <div class="auth-card">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" placeholder="rtiedemann@une.edu">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••">
-                </div>
-                <div class="auth-buttons">
-                    <button class="btn btn-primary" onclick="login()">Log In</button>
-                    <button class="btn btn-accent" onclick="signup()">Sign Up</button>
-                </div>
-                <p style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted);">
-                    Demo mode - click either button to enter
-                </p>
+
+<div class="workshop-header">
+  <div class="eyebrow">Interactive prototype · v0.2</div>
+  <h1>The Shaw <em>Hub</em>.</h1>
+  <div class="sub">Tap anywhere. Send messages. RSVP. Submit forms. It's all live.</div>
+</div>
+
+<div class="reset-bar">
+  <button class="reset-btn" id="resetBtn">↻ Reset Demo</button>
+  <button class="reset-btn" id="tourBtn">▶ Start Tour</button>
+</div>
+
+<div class="phone">
+  <div class="phone-screen">
+    <div class="status-bar"><span>9:41</span><span class="icons"></span></div>
+    <div class="screen-body">
+
+      <!-- ============== HOME SCREEN ============== -->
+      <div class="screen active" id="screen-home">
+        <div class="home-content">
+          <div class="home-greet">
+            <div class="greet-time" id="greetTime">Tuesday · May 20</div>
+            <h2>Hey <em>Maya.</em></h2>
+          </div>
+
+          <div class="streak-card">
+            <div class="row">
+              <div>
+                <div class="label">Cohort Pulse</div>
+                <div class="big"><span id="activeCount">14</span> of 18 <em>active today</em></div>
+              </div>
+              <span class="pill">+3 since 8am</span>
             </div>
+          </div>
+
+          <div class="quick-grid">
+            <button class="quick-card accent" onclick="navigate('cal')">
+              <div class="qc-icon">📅</div>
+              <div class="qc-label">Showcase prep<br/>tomorrow · 4pm</div>
+            </button>
+            <button class="quick-card" onclick="openChat('rachel')">
+              <div class="badge" id="rachelBadge">2</div>
+              <div class="qc-icon">💬</div>
+              <div class="qc-label">Rachel sent<br/>you a message</div>
+            </button>
+            <button class="quick-card accent2" onclick="navigate('projects')">
+              <div class="qc-icon">📋</div>
+              <div class="qc-label">Status update<br/>due today</div>
+            </button>
+            <button class="quick-card" onclick="openChat('planetary')">
+              <div class="qc-icon">🌊</div>
+              <div class="qc-label">Planetary Health<br/>poll: vote now</div>
+            </button>
+          </div>
+
+          <div class="section-label">
+            <span class="l">Activity</span>
+            <span class="more">See all</span>
+          </div>
+
+          <div class="feed-item">
+            <div class="feed-avatar">RH</div>
+            <div class="feed-body">
+              <div class="who">Rachel H. <span class="when">· 12m</span></div>
+              <div class="what">Posted a new event: <strong>Improv Workshop #3</strong> — Thursday 5pm. RSVP open 🎭</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-avatar b">JK</div>
+            <div class="feed-body">
+              <div class="who">Jordan K. <span class="when">· 1h</span></div>
+              <div class="what">Submitted Week 6 status update for Kelp Bar project 🌱</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-avatar c">SN</div>
+            <div class="feed-body">
+              <div class="who">Sam N. <span class="when">· 3h</span></div>
+              <div class="what">Reacted 🔥 to your update in #planetary-health</div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- ============== CHATS LIST ============== -->
+      <div class="screen" id="screen-chats">
+        <div class="chats-header">
+          <h2>Chats</h2>
+          <div class="search-bar"><span>🔍</span><span>Search messages, people, files</span></div>
+        </div>
+
+        <div class="chat-tabs">
+          <button class="chat-tab active">All</button>
+          <button class="chat-tab">Cohort</button>
+          <button class="chat-tab">Teams</button>
+          <button class="chat-tab">Rachel</button>
+        </div>
+
+        <div class="chat-list" id="chatList">
+          <button class="chat-row" onclick="openChat('announcements')">
+            <div class="chat-ava pinned">📢</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#announcements <span class="pin-icon">📌</span></span>
+                <span class="time">12m</span>
+              </div>
+              <div class="preview"><strong>Rachel H.:</strong> New event — Improv Workshop #3 Thursday</div>
+            </div>
+            <div class="unread-badge">3</div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('rachel')">
+            <div class="chat-ava solo">RH<div class="live-dot"></div></div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">Rachel Hardy <span style="font-size:10px;color:var(--accent);">· DM</span></span>
+                <span class="time">1h</span>
+              </div>
+              <div class="preview"><span class="typing">Rachel is typing...</span></div>
+            </div>
+            <div class="unread-badge" id="rachelChatBadge">2</div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('human-health')">
+            <div class="chat-ava health">🩺</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#human-health-team</span>
+                <span class="time">2h</span>
+              </div>
+              <div class="preview"><strong>Tyler:</strong> just dropped the prototype video, lmk 🎥</div>
+            </div>
+            <div class="unread-badge">7</div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('planetary')">
+            <div class="chat-ava">🌊</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#planetary-health</span>
+                <span class="time">3h</span>
+              </div>
+              <div class="preview">📊 Poll: which afternoon works for site visit?</div>
+            </div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('storytelling')">
+            <div class="chat-ava story">📖</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#impact-storytelling</span>
+                <span class="time">5h</span>
+              </div>
+              <div class="preview"><strong>Priya:</strong> drafted the script, anyone wanna review?</div>
+            </div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('innovation')">
+            <div class="chat-ava">🚀</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#innovation-teams</span>
+                <span class="time">Yesterday</span>
+              </div>
+              <div class="preview"><strong>Alex:</strong> office hours at 3 today, who's coming?</div>
+            </div>
+          </button>
+
+          <button class="chat-row" onclick="openChat('wins')">
+            <div class="chat-ava">🎉</div>
+            <div class="chat-info">
+              <div class="top">
+                <span class="name">#wins</span>
+                <span class="time">Yesterday</span>
+              </div>
+              <div class="preview"><strong>Sam:</strong> got the grant!! 🏆</div>
+            </div>
+          </button>
+        </div>
+
+        <div class="dm-note">
+          <strong>Note:</strong> Fellows can DM Rachel directly. Peer-to-peer DMs are off — keeps conversation in the cohort channels.
+        </div>
+      </div>
+
+      <!-- ============== CHAT THREAD ============== -->
+      <div class="screen" id="screen-thread">
+        <div class="chat-thread-header">
+          <button class="back-btn" onclick="navigate('chats')">←</button>
+          <div class="thread-icon" id="threadIcon">🌊</div>
+          <div class="thread-title">
+            <h3 id="threadName">#planetary-health</h3>
+            <div class="sub" id="threadSub">5 members · <span class="live">3 active now</span></div>
+          </div>
+          <div style="font-size:20px;color:var(--muted);">⋯</div>
+        </div>
+
+        <div class="messages" id="messages">
+          <!-- populated by JS -->
+        </div>
+
+        <div class="composer">
+          <button class="comp-icon">＋</button>
+          <div class="composer-input">
+            <input type="text" id="msgInput" placeholder="Message #planetary-health" />
+          </div>
+          <div class="composer-actions">
+            <button class="comp-icon">😊</button>
+            <button class="comp-icon send" onclick="sendMessage()">↑</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== CALENDAR ============== -->
+      <div class="screen" id="screen-cal">
+        <div class="cal-header">
+          <div class="month">May 2026 · Week 21</div>
+          <h2>What's <em>next.</em></h2>
+        </div>
+
+        <div class="week-strip">
+          <button class="week-day"><div class="wd">Mon</div><div class="dd">19</div></button>
+          <button class="week-day today has-event"><div class="wd">Tue</div><div class="dd">20</div></button>
+          <button class="week-day has-event"><div class="wd">Wed</div><div class="dd">21</div></button>
+          <button class="week-day has-event"><div class="wd">Thu</div><div class="dd">22</div></button>
+          <button class="week-day"><div class="wd">Fri</div><div class="dd">23</div></button>
+          <button class="week-day"><div class="wd">Sat</div><div class="dd">24</div></button>
+          <button class="week-day has-event"><div class="wd">Sun</div><div class="dd">25</div></button>
+        </div>
+
+        <div class="events-list">
+          <div class="event-day-label">Today · Tue 5/20</div>
+
+          <div class="event-card warning">
+            <div class="e-time">⏰ DUE TODAY · 11:59 PM</div>
+            <div class="e-title">Week 6 Status Update</div>
+            <div class="e-meta">
+              <span>📋 Form</span>
+              <span>2 min</span>
+            </div>
+            <div class="e-actions">
+              <button class="rsvp-btn rsvp-yes" onclick="navigate('projects'); setTimeout(() => openSubmission('week6'), 300);">Submit now →</button>
+            </div>
+          </div>
+
+          <div class="event-day-label">Tomorrow · Wed 5/21</div>
+
+          <div class="event-card featured">
+            <div class="e-time">4:00 – 5:30 PM · CIE CONFERENCE ROOM</div>
+            <div class="e-title">Showcase Prep — Final Run-Through</div>
+            <div class="e-meta">
+              <span>👥 18 invited · <span id="showcaseCount">12</span> yes</span>
+              <span>📍 In person</span>
+            </div>
+            <div class="e-actions">
+              <button class="rsvp-btn rsvp-yes" id="rsvpShowcase" onclick="rsvpEvent('showcase', this, 'yes')">I'm in</button>
+              <button class="rsvp-btn rsvp-maybe" onclick="rsvpEvent('showcase', this, 'maybe')">Maybe</button>
+            </div>
+          </div>
+
+          <div class="event-day-label">Thu 5/22</div>
+
+          <div class="event-card">
+            <div class="e-time">5:00 – 6:30 PM · STUDIO B</div>
+            <div class="e-title">Improv Workshop #3 — Yes, And</div>
+            <div class="e-meta">
+              <span>🎭 With Rachel</span>
+              <span><span id="improvCount">9</span> yes so far</span>
+            </div>
+            <div class="e-actions">
+              <button class="rsvp-btn rsvp-yes" id="rsvpImprov" onclick="rsvpEvent('improv', this, 'yes')">RSVP</button>
+              <button class="rsvp-btn rsvp-maybe" onclick="rsvpEvent('improv', this, 'maybe')">Maybe</button>
+            </div>
+          </div>
+
+          <div class="event-day-label">Sun 5/25</div>
+
+          <div class="event-card">
+            <div class="e-time">10:00 AM · DECELLE HALL</div>
+            <div class="e-title">2026 Innovation Showcase</div>
+            <div class="e-meta">
+              <span>🌟 Mandatory</span>
+            </div>
+            <div class="e-actions">
+              <button class="rsvp-btn rsvp-yes confirmed">Confirmed ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== PROJECTS ============== -->
+      <div class="screen" id="screen-projects">
+        <div class="sub-header">
+          <h2>My <em>Projects.</em></h2>
+          <div class="sub-sub">Track: Planetary Health · Cohort 2025–26</div>
+        </div>
+
+        <div class="progress-card">
+          <div class="pc-label">Fellowship Progress</div>
+          <div class="pc-title">SeaMade Kelp Bar Project</div>
+          <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+          <div class="pc-meta">
+            <span id="progressPct">67% complete</span>
+            <span id="progressCount">8 of 12 milestones</span>
+          </div>
+        </div>
+
+        <div class="submission-list" id="submissionList">
+          <div class="section-label">
+            <span class="l">Up Next</span>
+          </div>
+
+          <div id="upNextList">
+            <button class="sub-item urgent" data-sub="week6" onclick="openSubmission('week6')">
+              <div class="sub-status urgent">!</div>
+              <div class="sub-detail">
+                <div class="s-name">Week 6 Status Update</div>
+                <div class="s-meta"><span class="due">Due today</span> · 11:59 PM · 2 min form</div>
+              </div>
+              <div style="font-size:14px;">→</div>
+            </button>
+
+            <button class="sub-item" data-sub="midsurvey" onclick="openSubmission('midsurvey')">
+              <div class="sub-status"></div>
+              <div class="sub-detail">
+                <div class="s-name">Mid-Fellowship Feedback Survey</div>
+                <div class="s-meta">Due Fri 5/23 · 10 min</div>
+              </div>
+              <div style="font-size:14px;">→</div>
+            </button>
+
+            <button class="sub-item" data-sub="slidedeck" onclick="openSubmission('slidedeck')">
+              <div class="sub-status"></div>
+              <div class="sub-detail">
+                <div class="s-name">Showcase Slide Deck — Draft</div>
+                <div class="s-meta">Due Sat 5/24 · Upload PDF</div>
+              </div>
+              <div style="font-size:14px;">→</div>
+            </button>
+          </div>
+
+          <div class="section-label">
+            <span class="l">Done This Month</span>
+          </div>
+
+          <div id="doneList">
+            <div class="sub-item done">
+              <div class="sub-status done">✓</div>
+              <div class="sub-detail">
+                <div class="s-name">Week 5 Status Update</div>
+                <div class="s-meta">Submitted 5/13 · 🔥 streak: 5</div>
+              </div>
+            </div>
+
+            <div class="sub-item done">
+              <div class="sub-status done">✓</div>
+              <div class="sub-detail">
+                <div class="s-name">AI Use Policy Acknowledgment</div>
+                <div class="s-meta">Signed 5/8</div>
+              </div>
+            </div>
+
+            <div class="sub-item done">
+              <div class="sub-status done">✓</div>
+              <div class="sub-detail">
+                <div class="s-name">Week 4 Status Update</div>
+                <div class="s-meta">Submitted 5/6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== ME / PROFILE ============== -->
+      <div class="screen" id="screen-me">
+        <div class="me-content">
+          <div class="me-hero">
+            <div class="me-avatar">M</div>
+            <div class="me-name">Maya Chen</div>
+            <div class="me-meta">Planetary Health · Cohort 2025–26</div>
+          </div>
+
+          <div class="me-stats">
+            <div class="stat-card">
+              <div class="stat-n">100%</div>
+              <div class="stat-l">On-time<br/>submissions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-n">5🔥</div>
+              <div class="stat-l">Current<br/>streak</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-n">12</div>
+              <div class="stat-l">Events<br/>attended</div>
+            </div>
+          </div>
+
+          <div class="section-label">
+            <span class="l">Notifications</span>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="t-label">DMs from Rachel</div>
+              <div class="t-desc">Always notify, even when muted</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="t-label">@mentions in channels</div>
+              <div class="t-desc">When someone tags you specifically</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="t-label">Event reminders</div>
+              <div class="t-desc">1 hour before each RSVP'd event</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="t-label">Deadline alerts</div>
+              <div class="t-desc">Day before + 2 hours before due</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="t-label">Channel activity digest</div>
+              <div class="t-desc">Daily summary at 8am</div>
+            </div>
+            <button class="toggle" onclick="this.classList.toggle('on')"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-screen="home" onclick="navigate('home')"><div class="nav-icon">⌂</div><span>Home</span><div class="dot"></div></button>
+        <button class="nav-item" data-screen="chats" onclick="navigate('chats')"><div class="nav-icon">💬</div><span>Chats</span><div class="dot"></div></button>
+        <button class="nav-item" data-screen="cal" onclick="navigate('cal')"><div class="nav-icon">📅</div><span>Cal</span><div class="dot"></div></button>
+        <button class="nav-item" data-screen="projects" onclick="navigate('projects')"><div class="nav-icon">📋</div><span>Projects</span><div class="dot"></div></button>
+        <button class="nav-item" data-screen="me" onclick="navigate('me')"><div class="nav-icon">◉</div><span>Me</span><div class="dot"></div></button>
+      </div>
+
+      <!-- MODAL OVERLAY -->
+      <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- TOAST -->
+      <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-text">Saved</span>
+      </div>
+
+      <!-- HINT -->
+      <div class="hint" id="hint">Try tapping a channel</div>
+
     </div>
+  </div>
+</div>
 
-    <div class="container" style="display: none;" id="app-container">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h1>Shaw Hub</h1>
-                <p id="userRole">Fellow</p>
+<div class="footer-tips">
+  Tip: <span class="accent">Tap quick cards</span> on home · <span class="accent">Send messages</span> in chat · <span class="accent">Vote in the poll</span> in #planetary-health · <span class="accent">RSVP & submit forms</span> for confetti
+</div>
+
+<script>
+  // ============================================
+  // STATE
+  // ============================================
+  const initialState = {
+    currentScreen: 'home',
+    currentChannel: 'planetary',
+    rsvps: { showcase: null, improv: null },
+    completedSubs: ['week5', 'aipolicy', 'week4'],
+    progressPct: 67,
+    progressMilestones: 8,
+    pollVote: null,
+    pollVotes: { wed: 3, thu: 2, fri: 0 },
+    messages: {
+      'planetary': [
+        { type: 'divider', text: '— Today —' },
+        { type: 'msg', author: 'Jordan K.', avatar: 'JK', body: 'site visit data is in 🎯 want to walk through it?', time: '9:12 AM' },
+        { type: 'msg', author: 'Rachel H.', avatar: 'RH', avatarColor: 'var(--accent-2)', body: 'yes please! drop the link here', time: '9:14 AM' },
+        { type: 'file', author: 'Jordan K.', avatar: 'JK', fileName: 'site-visit-week6.pdf', fileSize: '2.4 MB', time: '9:15 AM', reactions: [{ emoji: '🔥', count: 3 }, { emoji: '👀', count: 2 }] },
+        { type: 'poll', author: 'Sam N.', avatar: 'SN', avatarColor: '#7c3aed', time: '9:22 AM' }
+      ],
+      'rachel': [
+        { type: 'divider', text: '— Today —' },
+        { type: 'msg', author: 'Rachel H.', avatar: 'RH', avatarColor: 'var(--accent)', body: "Hey! Just checking in — how's the kelp bar prototype coming?", time: '10:42 AM' },
+        { type: 'msg', author: 'Rachel H.', avatar: 'RH', avatarColor: 'var(--accent)', body: 'Also, big reminder: Week 6 status update is due today by 11:59. Let me know if you need anything 🌱', time: '10:43 AM' }
+      ],
+      'announcements': [
+        { type: 'divider', text: '— Yesterday —' },
+        { type: 'msg', author: 'Rachel H.', avatar: 'RH', avatarColor: 'var(--ink)', body: '📢 New event: Improv Workshop #3 — "Yes, And" — Thursday 5/22, Studio B, 5–6:30pm. RSVP in the calendar tab!', time: '4:12 PM', reactions: [{ emoji: '🎭', count: 8 }, { emoji: '🙌', count: 5 }] },
+        { type: 'divider', text: '— Today —' },
+        { type: 'msg', author: 'Rachel H.', avatar: 'RH', avatarColor: 'var(--ink)', body: 'Showcase prep tomorrow at 4pm in the CIE conference room. Bring your latest deck draft.', time: '9:00 AM' }
+      ],
+      'human-health': [
+        { type: 'divider', text: '— Today —' },
+        { type: 'msg', author: 'Tyler M.', avatar: 'TM', body: 'just dropped the prototype video, lmk what you think 🎥', time: '7:42 AM' },
+        { type: 'msg', author: 'Priya S.', avatar: 'PS', avatarColor: 'var(--accent-2)', body: 'omg this is sooo good 🔥🔥', time: '8:01 AM' }
+      ],
+      'storytelling': [
+        { type: 'divider', text: '— Today —' },
+        { type: 'msg', author: 'Priya S.', avatar: 'PS', avatarColor: 'var(--accent-2)', body: 'drafted the script for the showcase video, anyone wanna review?', time: '4:32 AM' }
+      ],
+      'innovation': [
+        { type: 'divider', text: '— Yesterday —' },
+        { type: 'msg', author: 'Alex R.', avatar: 'AR', body: 'office hours at 3 today, who\'s coming?', time: '11:15 AM' }
+      ],
+      'wins': [
+        { type: 'divider', text: '— Yesterday —' },
+        { type: 'msg', author: 'Sam N.', avatar: 'SN', avatarColor: '#7c3aed', body: 'GOT THE GRANT!!! 🏆 thanks to everyone who helped on the application 💚', time: '2:14 PM', reactions: [{ emoji: '🎉', count: 12 }, { emoji: '🔥', count: 8 }, { emoji: '👏', count: 6 }] }
+      ]
+    }
+  };
+
+  let state = JSON.parse(JSON.stringify(initialState));
+
+  const channelMeta = {
+    'planetary': { name: '#planetary-health', icon: '🌊', iconBg: 'var(--accent-2)', sub: '5 members · <span class="live">3 active now</span>' },
+    'rachel': { name: 'Rachel Hardy', icon: 'RH', iconBg: 'var(--accent)', iconClass: 'dm', sub: 'Program Manager · <span class="live">online</span>' },
+    'announcements': { name: '#announcements', icon: '📢', iconBg: 'var(--ink)', sub: '18 members · pinned' },
+    'human-health': { name: '#human-health-team', icon: '🩺', iconBg: 'var(--accent-2)', sub: '5 members · <span class="live">2 active now</span>' },
+    'storytelling': { name: '#impact-storytelling', icon: '📖', iconBg: 'var(--highlight)', sub: '4 members' },
+    'innovation': { name: '#innovation-teams', icon: '🚀', iconBg: 'var(--kelp)', sub: '4 members' },
+    'wins': { name: '#wins', icon: '🎉', iconBg: 'var(--accent)', sub: '18 members · share the good news' }
+  };
+
+  const submissionMeta = {
+    'week6': {
+      title: 'Week 6 Status Update',
+      sub: 'Quick check-in on your project this week. Takes ~2 min.',
+      fields: [
+        { label: 'What did you make progress on?', type: 'textarea', placeholder: 'Spent most of the week iterating on the bar packaging...' },
+        { label: 'Any blockers?', type: 'textarea', placeholder: 'Waiting on lab access for shelf-life testing' },
+        { label: 'How are you feeling? (1-5)', type: 'select', options: ['5 — energized', '4 — good', '3 — neutral', '2 — stuck', '1 — struggling'] }
+      ]
+    },
+    'midsurvey': {
+      title: 'Mid-Fellowship Feedback Survey',
+      sub: 'Your honest feedback shapes the rest of the program. ~10 min.',
+      fields: [
+        { label: 'What\'s working best?', type: 'textarea', placeholder: 'The community in our cohort is...' },
+        { label: 'What would you change?', type: 'textarea', placeholder: 'I wish we had more time for...' },
+        { label: 'Workshop favorites (pick all)', type: 'text', placeholder: 'Improv, Pitching, Site visits...' }
+      ]
+    },
+    'slidedeck': {
+      title: 'Showcase Slide Deck — Draft',
+      sub: 'Upload your draft PDF for review before Sunday.',
+      fields: [
+        { label: 'Project title', type: 'text', placeholder: 'SeaMade Kelp Bar Project' },
+        { label: 'Upload', type: 'file' },
+        { label: 'Notes for Rachel', type: 'textarea', placeholder: 'Still working on the financials slide...' }
+      ]
+    }
+  };
+
+  // ============================================
+  // NAVIGATION
+  // ============================================
+  function navigate(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screen).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.screen === screen || (screen === 'thread' && n.dataset.screen === 'chats'));
+    });
+    state.currentScreen = screen;
+  }
+
+  function openChat(channel) {
+    state.currentChannel = channel;
+    const meta = channelMeta[channel];
+    document.getElementById('threadName').textContent = meta.name;
+    document.getElementById('threadSub').innerHTML = meta.sub;
+    const iconEl = document.getElementById('threadIcon');
+    iconEl.textContent = meta.icon;
+    iconEl.style.background = meta.iconBg;
+    iconEl.className = 'thread-icon' + (meta.iconClass ? ' ' + meta.iconClass : '');
+    document.getElementById('msgInput').placeholder = 'Message ' + meta.name;
+
+    if (channel === 'rachel') {
+      document.getElementById('rachelBadge').classList.add('hidden');
+      document.getElementById('rachelChatBadge').classList.add('hidden');
+    }
+
+    renderMessages();
+    navigate('thread');
+  }
+
+  // ============================================
+  // RENDER MESSAGES
+  // ============================================
+  function renderMessages() {
+    const container = document.getElementById('messages');
+    container.innerHTML = '';
+    const msgs = state.messages[state.currentChannel] || [];
+
+    msgs.forEach(m => {
+      if (m.type === 'divider') {
+        const d = document.createElement('div');
+        d.className = 'day-divider';
+        d.textContent = m.text;
+        container.appendChild(d);
+      } else if (m.type === 'msg') {
+        const wrap = document.createElement('div');
+        wrap.className = 'msg' + (m.me ? ' me' : '');
+        const ava = m.me ? `<div class="msg-ava">M</div>` : `<div class="msg-ava" style="background:${m.avatarColor || 'var(--kelp)'};">${m.avatar}</div>`;
+        wrap.innerHTML = `
+          ${ava}
+          <div>
+            ${!m.me ? `<div class="msg-name">${m.author}</div>` : ''}
+            <div class="msg-bubble">${m.body}</div>
+            <div class="msg-time">${m.time}</div>
+          </div>
+        `;
+        container.appendChild(wrap);
+      } else if (m.type === 'file') {
+        const wrap = document.createElement('div');
+        wrap.className = 'msg';
+        wrap.innerHTML = `
+          <div class="msg-ava">${m.avatar}</div>
+          <div>
+            <div class="msg-name">${m.author}</div>
+            <div class="file-msg">
+              <span class="file-icon">📎</span>
+              <div>
+                <div class="file-name">${m.fileName}</div>
+                <div class="file-size">${m.fileSize}</div>
+              </div>
             </div>
-            <nav class="sidebar-nav">
-                <button class="nav-item active" onclick="switchPage('dashboard', this)">🏠 Home</button>
-                <button class="nav-item" onclick="switchPage('chats', this)">💬 Chats</button>
-                <button class="nav-item" onclick="switchPage('calendar', this)">📅 Calendar</button>
-                <button class="nav-item" onclick="switchPage('projects', this)">📋 Projects</button>
-                <button class="nav-item" onclick="switchPage('profile', this)">👤 Profile</button>
-                <button class="nav-item" onclick="switchPage('admin', this)" id="adminNav" style="display: none;">⚙️ Admin</button>
-            </nav>
-            <div class="sidebar-footer">
-                <button class="logout-btn" onclick="logout()">Log Out</button>
+            <div class="msg-time">${m.time}</div>
+          </div>
+        `;
+        container.appendChild(wrap);
+        if (m.reactions) {
+          const r = document.createElement('div');
+          r.className = 'reactions';
+          r.innerHTML = m.reactions.map(rx => `<button class="react-pill" onclick="toggleReaction(this)">${rx.emoji} ${rx.count}</button>`).join('');
+          container.appendChild(r);
+        }
+      } else if (m.type === 'poll') {
+        const wrap = document.createElement('div');
+        wrap.className = 'msg';
+        const totalVotes = state.pollVotes.wed + state.pollVotes.thu + state.pollVotes.fri;
+        const wedPct = totalVotes ? Math.round(state.pollVotes.wed / totalVotes * 100) : 0;
+        const thuPct = totalVotes ? Math.round(state.pollVotes.thu / totalVotes * 100) : 0;
+        const friPct = totalVotes ? Math.round(state.pollVotes.fri / totalVotes * 100) : 0;
+        wrap.innerHTML = `
+          <div class="msg-ava" style="background:${m.avatarColor};">${m.avatar}</div>
+          <div>
+            <div class="msg-name">${m.author}</div>
+            <div class="poll-msg">
+              <div class="poll-q">📊 site visit — which afternoon?</div>
+              <div class="poll-opt ${state.pollVote === 'wed' ? 'voted' : ''}" onclick="votePoll('wed')">
+                <div class="opt-text"><span>Wed 5/22</span><span class="votes">${state.pollVotes.wed} votes</span></div>
+                <div class="bar-wrap"><div class="bar" style="width:${wedPct}%">${wedPct}%</div></div>
+              </div>
+              <div class="poll-opt kelp ${state.pollVote === 'thu' ? 'voted' : ''}" onclick="votePoll('thu')">
+                <div class="opt-text"><span>Thu 5/23</span><span class="votes">${state.pollVotes.thu} votes</span></div>
+                <div class="bar-wrap"><div class="bar" style="width:${thuPct}%">${thuPct}%</div></div>
+              </div>
+              <div class="poll-opt ${state.pollVote === 'fri' ? 'voted' : ''}" onclick="votePoll('fri')">
+                <div class="opt-text"><span>Fri 5/24</span><span class="votes">${state.pollVotes.fri} votes</span></div>
+                <div class="bar-wrap"><div class="bar" style="width:${friPct}%">${friPct}%</div></div>
+              </div>
             </div>
+            <div class="msg-time">${m.time}</div>
+          </div>
+        `;
+        container.appendChild(wrap);
+      }
+    });
+
+    // scroll to bottom
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // ============================================
+  // INTERACTIONS
+  // ============================================
+  function sendMessage() {
+    const input = document.getElementById('msgInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    state.messages[state.currentChannel].push({
+      type: 'msg',
+      me: true,
+      body: text,
+      time: timeStr
+    });
+
+    input.value = '';
+    renderMessages();
+
+    // Rachel auto-replies in DM
+    if (state.currentChannel === 'rachel') {
+      setTimeout(() => simulateRachelReply(), 1200);
+    }
+    // Auto-reaction in channels
+    else if (Math.random() > 0.5) {
+      setTimeout(() => {
+        const reactions = ['🔥', '💯', '👏', '🙌', '✨'];
+        const r = reactions[Math.floor(Math.random() * reactions.length)];
+        const lastMsg = state.messages[state.currentChannel][state.messages[state.currentChannel].length - 1];
+        if (!lastMsg.reactions) lastMsg.reactions = [];
+        lastMsg.reactions.push({ emoji: r, count: 1 });
+        // simple: just show a toast
+        showToast(r + ' reaction added', '👀');
+      }, 1500);
+    }
+  }
+
+  function simulateRachelReply() {
+    const msgs = document.getElementById('messages');
+    // typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'typing-indicator';
+    typing.id = 'tempTyping';
+    typing.innerHTML = `<span>Rachel is typing</span><span class="typing-dots"><span></span><span></span><span></span></span>`;
+    msgs.appendChild(typing);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    setTimeout(() => {
+      const t = document.getElementById('tempTyping');
+      if (t) t.remove();
+      const replies = [
+        'got it, thanks Maya! 🌱',
+        'love this update — let\'s talk more tomorrow',
+        'sounds great! keep me posted',
+        'amazing work this week 💚',
+        'awesome, glad to hear it'
+      ];
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      state.messages.rachel.push({
+        type: 'msg',
+        author: 'Rachel H.',
+        avatar: 'RH',
+        avatarColor: 'var(--accent)',
+        body: reply,
+        time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+      });
+      renderMessages();
+    }, 1800);
+  }
+
+  function votePoll(option) {
+    if (state.pollVote === option) return;
+    if (state.pollVote) {
+      state.pollVotes[state.pollVote]--;
+    }
+    state.pollVote = option;
+    state.pollVotes[option]++;
+    renderMessages();
+    showToast('Vote recorded', '✓');
+  }
+
+  function toggleReaction(btn) {
+    btn.classList.toggle('you-reacted');
+    const txt = btn.textContent;
+    const [emoji, num] = txt.split(' ');
+    const newNum = btn.classList.contains('you-reacted') ? parseInt(num) + 1 : parseInt(num) - 1;
+    btn.textContent = emoji + ' ' + newNum;
+  }
+
+  function rsvpEvent(event, btn, type) {
+    const parent = btn.closest('.event-card');
+    const buttons = parent.querySelectorAll('.rsvp-btn');
+    buttons.forEach(b => b.classList.remove('confirmed'));
+
+    state.rsvps[event] = type;
+    if (type === 'yes') {
+      btn.classList.add('confirmed');
+      btn.textContent = 'Confirmed ✓';
+      if (event === 'showcase') {
+        const el = document.getElementById('showcaseCount');
+        el.textContent = parseInt(el.textContent) + 1;
+      }
+      if (event === 'improv') {
+        const el = document.getElementById('improvCount');
+        el.textContent = parseInt(el.textContent) + 1;
+      }
+      showToast('RSVP confirmed', '🎉');
+      fireConfetti();
+    } else {
+      btn.classList.add('confirmed');
+      btn.textContent = 'Maybe ✓';
+      showToast('Marked as maybe', '👋');
+    }
+  }
+
+  // ============================================
+  // SUBMISSIONS / MODAL
+  // ============================================
+  function openSubmission(subId) {
+    const meta = submissionMeta[subId];
+    if (!meta) return;
+
+    const fieldsHtml = meta.fields.map(f => {
+      if (f.type === 'textarea') {
+        return `<div class="form-field"><label>${f.label}</label><textarea placeholder="${f.placeholder || ''}"></textarea></div>`;
+      } else if (f.type === 'select') {
+        return `<div class="form-field"><label>${f.label}</label><select>${f.options.map(o => `<option>${o}</option>`).join('')}</select></div>`;
+      } else if (f.type === 'file') {
+        return `<div class="form-field"><label>${f.label}</label><div class="file-upload"><span class="upload-icon">📎</span>Tap to upload PDF<br/><small>or drag and drop</small></div></div>`;
+      } else {
+        return `<div class="form-field"><label>${f.label}</label><input type="text" placeholder="${f.placeholder || ''}" /></div>`;
+      }
+    }).join('');
+
+    document.getElementById('modalContent').innerHTML = `
+      <div class="modal-handle"></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h3>${meta.title}</h3>
+      <div class="modal-sub">${meta.sub}</div>
+      ${fieldsHtml}
+      <button class="modal-submit" onclick="submitForm('${subId}')">Submit →</button>
+    `;
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+
+  function submitForm(subId) {
+    closeModal();
+    fireConfetti();
+    showToast("Submitted! Streak: 6 🔥", '🎉');
+
+    // remove from up next
+    const item = document.querySelector(`.sub-item[data-sub="${subId}"]`);
+    if (item) {
+      item.style.transition = 'all 0.3s';
+      item.style.opacity = '0';
+      item.style.transform = 'translateX(40px)';
+
+      setTimeout(() => {
+        // add to done list
+        const sName = item.querySelector('.s-name').textContent;
+        const doneList = document.getElementById('doneList');
+        const newDone = document.createElement('div');
+        newDone.className = 'sub-item done';
+        newDone.style.opacity = '0';
+        newDone.innerHTML = `
+          <div class="sub-status done">✓</div>
+          <div class="sub-detail">
+            <div class="s-name">${sName}</div>
+            <div class="s-meta">Submitted just now · 🔥 streak: 6</div>
+          </div>
+        `;
+        doneList.insertBefore(newDone, doneList.firstChild);
+        setTimeout(() => {
+          newDone.style.transition = 'opacity 0.4s';
+          newDone.style.opacity = '1';
+        }, 50);
+        item.remove();
+
+        // update progress bar
+        state.progressMilestones++;
+        state.progressPct = Math.round((state.progressMilestones / 12) * 100);
+        document.getElementById('progressFill').style.width = state.progressPct + '%';
+        document.getElementById('progressPct').textContent = state.progressPct + '% complete';
+        document.getElementById('progressCount').textContent = state.progressMilestones + ' of 12 milestones';
+      }, 300);
+    }
+  }
+
+  // ============================================
+  // TOAST + CONFETTI
+  // ============================================
+  function showToast(text, icon = '✓') {
+    const t = document.getElementById('toast');
+    t.querySelector('.toast-text').textContent = text;
+    t.querySelector('.toast-icon').textContent = icon;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function fireConfetti() {
+    const colors = ['#ff5b2e', '#ffd84d', '#1d4d3a', '#2e5bff', '#0a0a0a'];
+    const phoneScreen = document.querySelector('.phone-screen');
+    const rect = phoneScreen.getBoundingClientRect();
+
+    for (let i = 0; i < 40; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.left = (Math.random() * 100) + '%';
+      piece.style.top = '20%';
+      piece.style.animationDelay = (Math.random() * 0.3) + 's';
+      piece.style.animationDuration = (1.5 + Math.random() * 1) + 's';
+      piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+      phoneScreen.appendChild(piece);
+      setTimeout(() => piece.remove(), 2500);
+    }
+  }
+
+  // ============================================
+  // RESET + TOUR
+  // ============================================
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    state = JSON.parse(JSON.stringify(initialState));
+    // reset DOM
+    document.getElementById('rachelBadge').classList.remove('hidden');
+    document.getElementById('rachelChatBadge').classList.remove('hidden');
+    document.getElementById('showcaseCount').textContent = '12';
+    document.getElementById('improvCount').textContent = '9';
+    document.getElementById('progressFill').style.width = '67%';
+    document.getElementById('progressPct').textContent = '67% complete';
+    document.getElementById('progressCount').textContent = '8 of 12 milestones';
+
+    // reset rsvp buttons
+    document.querySelectorAll('.rsvp-yes').forEach(b => {
+      if (b.id === 'rsvpShowcase') {
+        b.classList.remove('confirmed');
+        b.textContent = "I'm in";
+      }
+      if (b.id === 'rsvpImprov') {
+        b.classList.remove('confirmed');
+        b.textContent = 'RSVP';
+      }
+    });
+
+    // reset projects list
+    document.getElementById('upNextList').innerHTML = `
+      <button class="sub-item urgent" data-sub="week6" onclick="openSubmission('week6')">
+        <div class="sub-status urgent">!</div>
+        <div class="sub-detail">
+          <div class="s-name">Week 6 Status Update</div>
+          <div class="s-meta"><span class="due">Due today</span> · 11:59 PM · 2 min form</div>
         </div>
-
-        <div class="main-content">
-            <!-- Dashboard Page -->
-            <div id="dashboard" class="page active">
-                <h1>Welcome to Shaw Hub</h1>
-                <p class="page-subtitle">Real-time communication for the Shaw Innovation Fellowship</p>
-
-                <div class="kpi-row">
-                    <div class="kpi-card">
-                        <div class="kpi-label">Active Fellows Today</div>
-                        <div class="kpi-value">14</div>
-                        <div class="kpi-subtext">of 18 fellows</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Pending Forms</div>
-                        <div class="kpi-value">3</div>
-                        <div class="kpi-subtext">due this week</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Event RSVP Rate</div>
-                        <div class="kpi-value">89%</div>
-                        <div class="kpi-subtext">confirmed</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">On-Time Rate</div>
-                        <div class="kpi-value">87%</div>
-                        <div class="kpi-subtext">this month</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>✨ Key Features</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                        <div>
-                            <h3 style="font-size: 16px; margin-bottom: 8px; font-weight: 600;">💬 Real-Time Messaging</h3>
-                            <p style="font-size: 14px; color: var(--muted); line-height: 1.4;">Group chats by track and peer-to-peer messaging between fellows</p>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 16px; margin-bottom: 8px; font-weight: 600;">📋 Form Submissions</h3>
-                            <p style="font-size: 14px; color: var(--muted); line-height: 1.4;">Submit required forms with deadline tracking and progress visibility</p>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 16px; margin-bottom: 8px; font-weight: 600;">📅 Event Calendar</h3>
-                            <p style="font-size: 14px; color: var(--muted); line-height: 1.4;">RSVP for events with real-time count updates</p>
-                        </div>
-                        <div>
-                            <h3 style="font-size: 16px; margin-bottom: 8px; font-weight: 600;">📊 Admin Dashboard</h3>
-                            <p style="font-size: 14px; color: var(--muted); line-height: 1.4;">Track engagement, send nudges, export data</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>📱 Mobile-First Design</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: var(--muted);">Shaw Hub works perfectly on phones, tablets, and desktops. No downloads needed — just a link to share. Built with Supabase for real-time data and Vercel for instant hosting.</p>
-                </div>
-            </div>
-
-            <!-- Chats Page -->
-            <div id="chats" class="page">
-                <h1>Chats</h1>
-                <p class="page-subtitle">Channels and direct messages</p>
-
-                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px;">
-                    <div>
-                        <div class="card">
-                            <h2>Channels</h2>
-                            <ul class="channel-list">
-                                <li class="channel-item" onclick="selectChat(this)">🌊 #planetary-health</li>
-                                <li class="channel-item" onclick="selectChat(this)">🩺 #human-health-team</li>
-                                <li class="channel-item" onclick="selectChat(this)">📖 #impact-storytelling</li>
-                                <li class="channel-item" onclick="selectChat(this)">🚀 #innovation-teams</li>
-                                <li class="channel-item" onclick="selectChat(this)">📢 #announcements</li>
-                            </ul>
-                            <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--paper-3);">
-                            <h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px;">Direct Messages</h3>
-                            <ul class="channel-list">
-                                <li class="channel-item" onclick="selectChat(this)">Maya Chen</li>
-                                <li class="channel-item" onclick="selectChat(this)">Jordan Davis</li>
-                                <li class="channel-item" onclick="selectChat(this)">Alex Kim</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="card">
-                            <h2 id="chatTitle">#planetary-health</h2>
-                            <div style="margin-bottom: 16px; max-height: 400px; overflow-y: auto;">
-                                <div class="message">
-                                    <div class="message-avatar avatar1">AC</div>
-                                    <div class="message-content">
-                                        <p>Alex Chen</p>
-                                        <div class="message-text">Has anyone started the environmental impact report?</div>
-                                        <div class="message-time">2:15 PM</div>
-                                    </div>
-                                </div>
-                                <div class="message">
-                                    <div class="message-avatar avatar2">JD</div>
-                                    <div class="message-content">
-                                        <p>Jordan Davis</p>
-                                        <div class="message-text">I'm working on section 3 right now! 🌿</div>
-                                        <div class="message-time">2:17 PM</div>
-                                    </div>
-                                </div>
-                                <div class="message">
-                                    <div class="message-avatar avatar3">MK</div>
-                                    <div class="message-content">
-                                        <p>Maya Kim</p>
-                                        <div class="message-text">Can we sync tomorrow at 4pm?</div>
-                                        <div class="message-time">2:28 PM</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <input type="text" placeholder="Type a message..." id="messageInput">
-                            </div>
-                            <button class="btn btn-accent" onclick="sendMessage()">Send</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Page -->
-            <div id="calendar" class="page">
-                <h1>Calendar</h1>
-                <p class="page-subtitle">Upcoming events and deadlines</p>
-
-                <div class="event-card" style="border-left-color: var(--accent);">
-                    <div class="event-header">
-                        <h3>Showcase Prep Workshop</h3>
-                        <button class="btn btn-accent" style="padding: 8px 12px; font-size: 13px;">RSVP</button>
-                    </div>
-                    <div class="event-meta">📅 May 21 • 4:00 PM - 5:30 PM</div>
-                    <div style="display: flex; gap: 24px;">
-                        <div>
-                            <div class="progress-text">Going: <strong>12</strong></div>
-                        </div>
-                        <div>
-                            <div class="progress-text">Maybe: <strong>3</strong></div>
-                        </div>
-                        <div>
-                            <div class="progress-text">Not Going: <strong>2</strong></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="event-card" style="border-left-color: var(--highlight);">
-                    <div class="event-header">
-                        <h3>Week 6 Status Update Due</h3>
-                        <button class="btn btn-accent" style="padding: 8px 12px; font-size: 13px;">Submit</button>
-                    </div>
-                    <div class="event-meta">📅 May 23 • 11:59 PM</div>
-                    <div>
-                        <div class="progress-text">Submissions: 14 / 18</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 78%;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="event-card" style="border-left-color: var(--accent-2);">
-                    <div class="event-header">
-                        <h3>Mid-Fellowship Feedback Survey</h3>
-                        <button class="btn btn-accent" style="padding: 8px 12px; font-size: 13px;">Submit</button>
-                    </div>
-                    <div class="event-meta">📅 May 24 • 11:59 PM</div>
-                    <div>
-                        <div class="progress-text">Submissions: 10 / 18</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 56%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Projects Page -->
-            <div id="projects" class="page">
-                <h1>Your Projects</h1>
-                <p class="page-subtitle">Track your submissions and progress</p>
-
-                <div class="card">
-                    <h2>Week 6 Status Update</h2>
-                    <div class="event-meta">Due: May 23, 11:59 PM</div>
-                    <div style="margin: 16px 0;">
-                        <span class="status-badge status-active">✓ Submitted</span>
-                    </div>
-                    <button class="btn btn-secondary" onclick="alert('Opening form submission...')">View Submission</button>
-                </div>
-
-                <div class="card">
-                    <h2>Mid-Fellowship Feedback</h2>
-                    <div class="event-meta">Due: May 24, 11:59 PM</div>
-                    <div style="margin: 16px 0;">
-                        <div class="form-group">
-                            <label>How is the fellowship going so far?</label>
-                            <textarea placeholder="Share your thoughts..." id="feedbackText"></textarea>
-                        </div>
-                        <button class="btn btn-accent" onclick="submitFeedback()">Submit Feedback</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Showcase Slide Deck</h2>
-                    <div class="event-meta">Due: June 5, 5:00 PM</div>
-                    <div style="margin: 16px 0; color: var(--muted);">
-                        Upload your presentation slides
-                    </div>
-                    <button class="btn btn-secondary" onclick="alert('File upload coming soon...')">Upload File</button>
-                </div>
-            </div>
-
-            <!-- Profile Page -->
-            <div id="profile" class="page">
-                <h1>Your Profile</h1>
-                <p class="page-subtitle">Manage your account settings</p>
-
-                <div class="card">
-                    <h2>Profile Information</h2>
-                    <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 24px;">
-                        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 600;">RH</div>
-                        <div>
-                            <p style="font-size: 20px; font-weight: 600; margin-bottom: 4px;" id="profileName">Rachel Hardy</p>
-                            <p style="color: var(--muted); margin-bottom: 8px;" id="profileEmail">rachel@maine.edu</p>
-                            <p style="font-size: 13px; color: var(--muted);" id="profileRole">Program Director • Admin</p>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 16px; border-top: 1px solid var(--paper-3);">
-                        <div>
-                            <div class="kpi-label">Messages Sent</div>
-                            <div class="kpi-value" style="font-size: 24px;">142</div>
-                        </div>
-                        <div>
-                            <div class="kpi-label">Forms Reviewed</div>
-                            <div class="kpi-value" style="font-size: 24px;">28</div>
-                        </div>
-                        <div>
-                            <div class="kpi-label">Streak Days</div>
-                            <div class="kpi-value" style="font-size: 24px;">18</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Preferences</h2>
-                    <div style="space: 16px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--paper-3);">
-                            <div>
-                                <p style="font-weight: 600; font-size: 14px;">Email Notifications</p>
-                                <p style="font-size: 13px; color: var(--muted);">Get notified when fellows submit</p>
-                            </div>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;">
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
-                            <div>
-                                <p style="font-weight: 600; font-size: 14px;">Push Notifications</p>
-                                <p style="font-size: 13px; color: var(--muted);">Browser notifications for messages</p>
-                            </div>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; cursor: pointer;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Admin Dashboard -->
-            <div id="admin" class="page">
-                <h1>Admin Dashboard</h1>
-                <p class="page-subtitle">Manage Shaw Innovation Fellowship cohort</p>
-
-                <div class="kpi-row">
-                    <div class="kpi-card">
-                        <div class="kpi-label">Active Fellows</div>
-                        <div class="kpi-value">14</div>
-                        <div class="kpi-subtext">of 18</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Pending Submissions</div>
-                        <div class="kpi-value">4</div>
-                        <div class="kpi-subtext">due today</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">Event RSVPs</div>
-                        <div class="kpi-value">89%</div>
-                        <div class="kpi-subtext">confirmed</div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-label">On-Time Rate</div>
-                        <div class="kpi-value">87%</div>
-                        <div class="kpi-subtext">this month</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Forms Tracker</h2>
-                    <div style="margin-bottom: 24px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="font-weight: 600;">Week 6 Status Update</span>
-                            <span style="color: var(--muted); font-size: 13px;">14/18</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 78%;"></div>
-                        </div>
-                        <button class="btn btn-accent" style="margin-top: 8px; padding: 8px 12px; font-size: 13px;" onclick="alert('Send nudge notifications to 4 fellows')">Nudge 4 →</button>
-                    </div>
-
-                    <div style="margin-bottom: 24px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="font-weight: 600;">Mid-Fellowship Feedback</span>
-                            <span style="color: var(--muted); font-size: 13px;">10/18</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 56%;"></div>
-                        </div>
-                        <button class="btn btn-accent" style="margin-top: 8px; padding: 8px 12px; font-size: 13px;" onclick="alert('Send nudge notifications to 8 fellows')">Nudge 8 →</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>Cohort Roster</h2>
-                    <table class="roster-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Track</th>
-                                <th>Status</th>
-                                <th>Streak</th>
-                                <th>Last Active</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Maya Chen</td>
-                                <td style="color: var(--muted);">Planetary Health</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td style="font-weight: 600;">6</td>
-                                <td style="color: var(--muted);">2 min ago</td>
-                            </tr>
-                            <tr>
-                                <td>Jordan Davis</td>
-                                <td style="color: var(--muted);">Human Health</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td style="font-weight: 600;">4</td>
-                                <td style="color: var(--muted);">12 min ago</td>
-                            </tr>
-                            <tr>
-                                <td>Alex Kim</td>
-                                <td style="color: var(--muted);">Impact Storytelling</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td style="font-weight: 600;">8</td>
-                                <td style="color: var(--muted);">1 hour ago</td>
-                            </tr>
-                            <tr>
-                                <td>Sam Patel</td>
-                                <td style="color: var(--muted);">Innovation Teams</td>
-                                <td><span class="status-badge status-quiet">Quiet</span></td>
-                                <td style="font-weight: 600;">2</td>
-                                <td style="color: var(--muted);">6 hours ago</td>
-                            </tr>
-                            <tr>
-                                <td>Casey Lee</td>
-                                <td style="color: var(--muted);">Planetary Health</td>
-                                <td><span class="status-badge status-active">Active</span></td>
-                                <td style="font-weight: 600;">5</td>
-                                <td style="color: var(--muted);">45 min ago</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card">
-                    <h2>Quick Actions</h2>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <button class="btn btn-accent" onclick="alert('Exporting engagement data as CSV...')">📊 Export Data</button>
-                        <button class="btn btn-accent" onclick="alert('Send broadcast message to all fellows')">📢 Send Announcement</button>
-                        <button class="btn btn-secondary" onclick="alert('View engagement heatmap')">🔥 View Heatmap</button>
-                    </div>
-                </div>
-            </div>
+        <div style="font-size:14px;">→</div>
+      </button>
+      <button class="sub-item" data-sub="midsurvey" onclick="openSubmission('midsurvey')">
+        <div class="sub-status"></div>
+        <div class="sub-detail">
+          <div class="s-name">Mid-Fellowship Feedback Survey</div>
+          <div class="s-meta">Due Fri 5/23 · 10 min</div>
         </div>
-    </div>
+        <div style="font-size:14px;">→</div>
+      </button>
+      <button class="sub-item" data-sub="slidedeck" onclick="openSubmission('slidedeck')">
+        <div class="sub-status"></div>
+        <div class="sub-detail">
+          <div class="s-name">Showcase Slide Deck — Draft</div>
+          <div class="s-meta">Due Sat 5/24 · Upload PDF</div>
+        </div>
+        <div style="font-size:14px;">→</div>
+      </button>
+    `;
+    document.getElementById('doneList').innerHTML = `
+      <div class="sub-item done">
+        <div class="sub-status done">✓</div>
+        <div class="sub-detail">
+          <div class="s-name">Week 5 Status Update</div>
+          <div class="s-meta">Submitted 5/13 · 🔥 streak: 5</div>
+        </div>
+      </div>
+      <div class="sub-item done">
+        <div class="sub-status done">✓</div>
+        <div class="sub-detail">
+          <div class="s-name">AI Use Policy Acknowledgment</div>
+          <div class="s-meta">Signed 5/8</div>
+        </div>
+      </div>
+      <div class="sub-item done">
+        <div class="sub-status done">✓</div>
+        <div class="sub-detail">
+          <div class="s-name">Week 4 Status Update</div>
+          <div class="s-meta">Submitted 5/6</div>
+        </div>
+      </div>
+    `;
 
-    <script>
-        let currentUser = null;
+    navigate('home');
+    showToast('Demo reset', '↻');
+  });
 
-        function login() {
-            const email = document.getElementById('loginEmail').value || 'rtiedemann@une.edu';
-            currentUser = email.includes('rtiedemann') ? 'admin' : 'fellow';
-            enterApp();
-        }
+  // ============================================
+  // GUIDED TOUR
+  // ============================================
+  const tourSteps = [
+    { screen: 'home', hint: 'Welcome! This is the home screen — tap the yellow card for "Status update due"', delay: 0 },
+    { screen: 'projects', hint: 'Tap the urgent yellow item at the top', delay: 2500 },
+    { action: () => openSubmission('week6'), hint: 'A real form — fill it out (or skip) and tap Submit', delay: 5000 },
+    { screen: 'chats', hint: 'Now check out the chats — tap #planetary-health', delay: 11000 },
+    { action: () => openChat('planetary'), hint: 'Try voting in the poll, sending a message, or reacting to a file', delay: 13500 },
+    { screen: 'cal', hint: 'Last stop: the calendar. Tap RSVP for the improv workshop.', delay: 18000 },
+    { hint: 'You got it! Hit Reset Demo to try again. 🎉', delay: 22000 }
+  ];
 
-        function signup() {
-            const email = document.getElementById('loginEmail').value || 'maya@maine.edu';
-            currentUser = email.includes('rtiedemann') ? 'admin' : 'fellow';
-            enterApp();
-        }
+  let tourTimers = [];
 
-        function enterApp() {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            
-            const userRole = document.getElementById('userRole');
-            const adminNav = document.getElementById('adminNav');
-            
-            if (currentUser === 'admin') {
-                userRole.textContent = 'Admin';
-                adminNav.style.display = 'block';
-                document.getElementById('profileRole').textContent = 'Program Director • Admin';
-                document.getElementById('profileName').textContent = 'Rachel Hardy';
-                document.getElementById('profileEmail').textContent = 'rachel@maine.edu';
-            } else {
-                userRole.textContent = 'Fellow';
-                adminNav.style.display = 'none';
-                document.getElementById('profileRole').textContent = 'Shaw Innovation Fellow';
-                document.getElementById('profileName').textContent = 'Maya Chen';
-                document.getElementById('profileEmail').textContent = 'maya@maine.edu';
-            }
-        }
+  document.getElementById('tourBtn').addEventListener('click', () => {
+    // clear any existing timers
+    tourTimers.forEach(t => clearTimeout(t));
+    tourTimers = [];
 
-        function switchPage(pageId, element) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
+    tourSteps.forEach((step) => {
+      const t = setTimeout(() => {
+        if (step.screen) navigate(step.screen);
+        if (step.action) step.action();
+        showHint(step.hint);
+      }, step.delay);
+      tourTimers.push(t);
+    });
+  });
 
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-        }
+  function showHint(text) {
+    const h = document.getElementById('hint');
+    h.textContent = text;
+    h.classList.add('show');
+    clearTimeout(window._hintTimer);
+    window._hintTimer = setTimeout(() => h.classList.remove('show'), 4500);
+  }
 
-        function logout() {
-            currentUser = null;
-            document.getElementById('app-container').style.display = 'none';
-            document.getElementById('auth-screen').style.display = 'flex';
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
+  // ============================================
+  // ENTER KEY for composer
+  // ============================================
+  document.getElementById('msgInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
 
-        function selectChat(element) {
-            const chats = document.querySelectorAll('.channel-item');
-            chats.forEach(chat => chat.style.background = 'none');
-            element.style.background = 'var(--paper-3)';
-            document.getElementById('chatTitle').textContent = element.textContent.trim();
-        }
+  // initial date
+  const now = new Date();
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  document.getElementById('greetTime').textContent = `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
+</script>
 
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            if (input.value.trim()) {
-                alert('Message sent: ' + input.value);
-                input.value = '';
-            }
-        }
-
-        function submitFeedback() {
-            const text = document.getElementById('feedbackText').value;
-            if (text.trim()) {
-                alert('Feedback submitted! Thank you.');
-                document.getElementById('feedbackText').value = '';
-            }
-        }
-    </script>
 </body>
 </html>
